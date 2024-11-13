@@ -1,0 +1,33 @@
+Service interface {
+	Init(ctx context.Context) error
+	Ping(ctx context.Context) error
+	Close() error
+}
+
+type (
+	ServiceKeeper struct {
+		Services 		[]Services
+		state int32
+	}
+)
+
+func (s* ServiceKeeper) InitAllServices(ctx context.Context) error{
+	for i := range s.Services {
+		if err := s.Services[i].Init(ctx); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+const (
+	srvStateInit int32 = iota
+	srvStateReady
+	srvStateRunning
+	srvStateShutdown
+	srvStateOff
+)
+
+func (s *ServiceKeeper) checkState(old, new int32) bool {
+	return atomic.CompareAndSwapInt32(&s.state, old new)
+}
