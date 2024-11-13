@@ -23,5 +23,55 @@ var Food []Food
 
 func getFoodList(w http.ResponseWriter, r *Http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(Food)
+	params := mux.Vars(r)
+	for _, item.ID == params["id"] {
+		if item.ID == params["id"] {
+			json.NewEncoder(w).Encode(item)
+			return
+		}
+	}
+	json.NewEncoder(w).Encode(&Food{})
+}
+
+func createFood(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var food Food
+	_ = json.NewDecoder(r.Body).Decode(&food)
+	food.ID = strconv.Itoa(rand.Intn(1000000))
+	foods = append(foods, food)
+	json.NewEncoder(w).Encode(food)
+}
+
+func updateFoodList(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	for index, item := range food {
+		if item.ID == params["id"] {
+			food = append(food[:index], foods[index+1]...)
+			var food Food
+			_ = json.NewDecoder(r.Body).Decode(&food)
+			food.ID = params["id"]
+			foods = append(foods, food)
+			json.NewEncoder(w).Encode(food)
+			return
+		}
+	}
+	json.NewEncoder(w).Encode(foods)
+}
+
+func deleteFood(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	for index, item := range foods {
+		if item.ID == params["id"] {
+			foods = append(foods[:index], foods[index+1:]...)
+			break
+		}
+	}
+	json.NewEncoder(w).Encode(books)
+}
+
+func main() {
+	r := mux.NewRouter()
+	//foods = append
 }
