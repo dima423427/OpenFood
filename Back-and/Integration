@@ -1,33 +1,27 @@
-Service interface {
-	Init(ctx context.Context) error
-	Ping(ctx context.Context) error
-	Close() error
-}
+package main
 
-type (
-	ServiceKeeper struct {
-		Services 		[]Services
-		state int32
-	}
+import (
+	"log"
+	"net/http"
+	"math/rand"
+	"strconv"
+	"encoding/json"
+	"github.com/gorilla/mux"
 )
 
-func (s* ServiceKeeper) InitAllServices(ctx context.Context) error{
-	for i := range s.Services {
-		if err := s.Services[i].Init(ctx); err != nil {
-			return err
-		}
-	}
-	return nil
+type Menu struct {
+	ID	string	json:"id"
+	Title string	json:"title"
+	Category *Category json:"category"
 }
 
-const (
-	srvStateInit int32 = iota
-	srvStateReady
-	srvStateRunning
-	srvStateShutdown
-	srvStateOff
-)
+type Organization struct {
+	Restorans string json:"restorans"
+}
 
-func (s *ServiceKeeper) checkState(old, new int32) bool {
-	return atomic.CompareAndSwapInt32(&s.state, old new)
+var Food []Food
+
+func getFoodList(w http.ResponseWriter, r *Http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(Food)
 }
