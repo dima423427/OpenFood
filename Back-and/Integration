@@ -73,5 +73,13 @@ func deleteFood(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	r := mux.NewRouter()
-	//foods = append
+	foods = append(foods, Food{ID: "1", Title: "Пицца", Restorans: &Restorans{name: "Тунгуска"}})
+	foods = append(foods, Food{ID: "1", Title: "Хачапури", Restorans: &Restorans{name: "Дзе"}})
+
+	r.HandleFunc("/foods", getFoodList).Methods("GET")
+	r.HandleFunc("/foods/{id}", getFoodList).Methods("GET")
+	r.HandleFunc("/foods", createFood).Methods("POST")
+	r.HandleFunc("/foods/{id}", updateFoodList).Methods("PUT")
+	r.HandleFunc("/foods/{id}", deleteFood).Methods("DELETE")
+	log.Fatal(http.ListenAndServe(":8000", r))
 }
